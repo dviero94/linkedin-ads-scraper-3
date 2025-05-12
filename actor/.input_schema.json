@@ -1,0 +1,24 @@
+{
+  "title": "Input Schema",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "startUrls": {
+      "title": "Start URLs",
+      "type": "array",
+      "description": "Lista di URL da visitare",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "title": "URL",
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": ["url"]
+      }
+    }
+  },
+  "required": ["startUrls"]
+}
