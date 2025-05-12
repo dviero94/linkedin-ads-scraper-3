@@ -12,18 +12,17 @@ const crawler = new PlaywrightCrawler({
     requestHandler: async ({ request, page }) => {
         console.log(`Processing ${request.url}...`);
 
-        // Cattura uno screenshot prima di attendere il caricamento degli elementi
+        // Screenshot immediato (anche se la pagina non carica bene)
         const screenshot = await page.screenshot({ fullPage: true });
         await Actor.setValue(`screenshot-${Date.now()}.png`, screenshot, { contentType: 'image/png' });
 
-        // Attendi che l'elemento desiderato sia presente
-        await page.waitForSelector('title');
+        // Prova a prendere il titolo senza aspettare
+        const title = await page.title().catch(() => 'No title');
 
-        // Estrai i dati desiderati
-        const title = await page.title();
-
-        // Salva i dati nel Dataset
-        await Actor.pushData({ url: request.url, title });
+        await Actor.pushData({
+            url: request.url,
+            title
+        });
     },
     launchContext: {
         launchOptions: {
