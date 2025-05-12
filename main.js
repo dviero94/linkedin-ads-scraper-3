@@ -15,12 +15,23 @@ const {
 
 const proxyConfiguration = await Actor.createProxyConfiguration(proxyInput || {});
 
-const urlsToScrape = combine_companies_onesearch
-    ? [search_url]
-    : companies.map((companyUrl) => {
+// 🔧 FIX: costruzione corretta degli URL da scrapare
+let urlsToScrape = [];
+
+if (combine_companies_onesearch && search_url) {
+    urlsToScrape = [search_url];
+} else if (companies.length > 0) {
+    urlsToScrape = companies.map((companyUrl) => {
         const accountOwner = new URL(companyUrl).pathname.split('/').filter(Boolean).pop();
         return `https://www.linkedin.com/ad-library/search?accountOwner=${accountOwner}`;
     });
+}
+
+if (urlsToScrape.length === 0) {
+    console.log('❌ Nessun URL valido da scrapare. Controlla il tuo input.');
+    await Actor.exit();
+    process.exit(1);
+}
 
 const crawler = new PlaywrightCrawler({
     proxyConfiguration,
@@ -33,9 +44,14 @@ const crawler = new PlaywrightCrawler({
         const screenshot = await page.screenshot({ fullPage: true });
         await Actor.setValue(`screenshot-${Date.now()}.png`, screenshot, { contentType: 'image/png' });
 
-        // Estrazione minima per test iniziale
+        // Estrazione minima per test
         const title = await page.title().catch(() => 'NO TITLE');
-        await pushData({ url: request.url, title });
+        console.log(`✅ Page title: ${title}`);
+
+        await pushData({
+            url: request.url,
+            title
+        });
     },
     launchContext: {
         launchOptions: {
