@@ -1,0 +1,13 @@
+{
+  "name": "linkedin-ads-scraper",
+  "version": "1.0.0",
+  "description": "Scraper per LinkedIn Ads utilizzando Apify e Playwright",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "apify": "^3.0.0",
+    "crawlee": "^3.0.0"
+  }
+}
