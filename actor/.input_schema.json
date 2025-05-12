@@ -1,24 +1,50 @@
 {
-  "title": "Input Schema",
+  "title": "LinkedIn Ads Scraper Input",
   "type": "object",
   "schemaVersion": 1,
   "properties": {
-    "startUrls": {
-      "title": "Start URLs",
+    "search_url": {
+      "title": "Search URL",
+      "type": "string",
+      "description": "Complete search URL from LinkedIn Ads Library.",
+      "default": "https://www.linkedin.com/ad-library/search?accountOwner=hubspot"
+    },
+    "companies": {
+      "title": "Company URLs",
       "type": "array",
-      "description": "Lista di URL da visitare",
       "items": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "title": "URL",
-            "type": "string",
-            "format": "uri"
-          }
-        },
-        "required": ["url"]
-      }
+        "type": "string"
+      },
+      "description": "List of company LinkedIn URLs to scrape.",
+      "editor": "stringList"
+    },
+    "limit": {
+      "title": "Max Requests",
+      "type": "integer",
+      "default": 10,
+      "description": "How many requests max should be executed"
+    },
+    "combine_companies_onesearch": {
+      "title": "Use only search_url",
+      "type": "boolean",
+      "default": false,
+      "description": "If true, will use only the search_url and ignore companies list"
+    },
+    "type_search": {
+      "title": "Search Type",
+      "type": "string",
+      "enum": ["search_word", "company_mode"],
+      "default": "search_word"
+    },
+    "proxyConfiguration": {
+      "title": "Proxy",
+      "type": "object",
+      "description": "Proxy settings for Apify proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "editor": "proxy"
     }
   },
-  "required": ["startUrls"]
+  "required": ["search_url"]
 }
